@@ -1,0 +1,6 @@
+target
+.git
+.gitignore
+Dockerfile
+.dockerignore
+src/main/resources/application-local.yml

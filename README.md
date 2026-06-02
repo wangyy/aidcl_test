@@ -55,6 +55,74 @@ npm run dev
 
 Vite 已配置 `/api` 代理到 `http://localhost:8080`。
 
+## Docker 打包运行
+
+项目提供前后端分离的两个 Dockerfile：
+
+- 后端镜像文件：`backend/Dockerfile`
+- 前端镜像文件：`frontend/Dockerfile`
+
+### 使用 Docker Compose 启动
+
+复制环境变量模板：
+
+```bash
+cp .env.example .env
+```
+
+编辑 `.env`，填入火山引擎 MySQL 连接信息：
+
+```bash
+MYSQL_URL=jdbc:mysql://你的火山引擎MySQL地址:3306/user_demo?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+MYSQL_USERNAME=你的用户名
+MYSQL_PASSWORD=你的密码
+FRONTEND_ORIGIN=http://localhost:5173
+```
+
+构建并启动：
+
+```bash
+docker compose up --build
+```
+
+访问前端页面：
+
+```text
+http://localhost:5173
+```
+
+访问后端接口：
+
+```text
+http://localhost:8080/api/users
+```
+
+### 分别构建镜像
+
+构建后端镜像：
+
+```bash
+docker build -t user-demo-backend:latest ./backend
+```
+
+构建前端镜像：
+
+```bash
+docker build -t user-demo-frontend:latest ./frontend
+```
+
+单独运行后端：
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e MYSQL_URL='jdbc:mysql://你的火山引擎MySQL地址:3306/user_demo?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true' \
+  -e MYSQL_USERNAME='你的用户名' \
+  -e MYSQL_PASSWORD='你的密码' \
+  user-demo-backend:latest
+```
+
+单独运行前端时，`frontend/nginx.conf` 默认把 `/api` 代理到 Docker Compose 服务名 `backend:8080`。如果不使用 Compose，需要按你的网络环境调整代理地址。
+
 ## API 列表
 
 | 方法 | 路径 | 说明 |
