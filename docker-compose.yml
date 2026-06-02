@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     image: user-demo-backend:latest
     container_name: user-demo-backend
+    env_file:
+      - .env
     environment:
       MYSQL_URL: ${MYSQL_URL}
       MYSQL_USERNAME: ${MYSQL_USERNAME}
@@ -12,6 +14,8 @@ services:
       FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:5173}
     ports:
       - "8080:8080"
+    networks:
+      - user-demo-net
     restart: unless-stopped
 
   frontend:
@@ -24,4 +28,10 @@ services:
       - "5173:80"
     depends_on:
       - backend
+    networks:
+      - user-demo-net
     restart: unless-stopped
+
+networks:
+  user-demo-net:
+    driver: bridge
