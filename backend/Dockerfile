@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1
 FROM maven:3.9.9-eclipse-temurin-11 AS build
 WORKDIR /app
 
